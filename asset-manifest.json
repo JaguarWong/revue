@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/revue/static/css/main.f855e6bc.css",
+    "main.js": "/revue/static/js/main.f2758a45.js",
+    "static/js/453.33e1bd0c.chunk.js": "/revue/static/js/453.33e1bd0c.chunk.js",
+    "static/media/logo.svg": "/revue/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "/revue/index.html",
+    "main.f855e6bc.css.map": "/revue/static/css/main.f855e6bc.css.map",
+    "main.f2758a45.js.map": "/revue/static/js/main.f2758a45.js.map",
+    "453.33e1bd0c.chunk.js.map": "/revue/static/js/453.33e1bd0c.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f855e6bc.css",
+    "static/js/main.f2758a45.js"
+  ]
+}
