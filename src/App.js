@@ -2,31 +2,40 @@ import './App.css';
 import React, { useState, useEffect } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from './firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, getIdTokenResult } from 'firebase/auth';
 import Login from './login';
 
 const App = () => {
-  const [title, setTitle] = useState('');
+  const [movie, setMovie] = useState('');
   const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const fetchTitle = async () => {
+    const fetchMovie = async () => {
       const docRef = doc(db, 'movies', 'jrD59zATINV4dSUR6dKX');
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        setTitle(docSnap.data().title);
+        setMovie(docSnap.data());
       } else {
         console.log('No such document!');
       }
     };
 
-    fetchTitle();
+    fetchMovie();
   }, []);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const tokenResult = await getIdTokenResult(user);
+        console.log(tokenResult);
+        setIsAdmin(!!tokenResult.claims.role && tokenResult.claims.role === 'admin');
+        setUser(user);
+      } else {
+        setUser(null);
+        setIsAdmin(false);
+      }
     });
 
     return () => unsubscribe();
@@ -34,18 +43,20 @@ const App = () => {
 
   return (
     <div>
-      <h1>{title ? title : 'Loading...'}</h1>
+      <p>{movie ? movie.title : 'Loading...'}</p>
+      <Movies />
       <div>
         {user ? (
           <div>
-            <h1>Welcome, {user.email}</h1>
+            <p>Welcome, {user.email}</p>
+            {isAdmin && <p>You are an admin.</p>}
             <button onClick={() => auth.signOut()}>Logout</button>
           </div>
         ) : (
           <Login />
         )}
       </div>
-      <button onClick={() => console.log(user)}>User</button>
+      <button onClick={() => console.log(movie)}>Info</button>
     </div>
   );
 };
